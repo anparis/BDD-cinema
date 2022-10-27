@@ -2,7 +2,11 @@
 #        Script MySQL.
 #------------------------------------------------------------
 
-
+#------------------------------------------------------------
+#  Database : Cinema
+#------------------------------------------------------------
+CREATE DATABASE IF NOT EXISTS cinema;
+USE cinema;
 #------------------------------------------------------------
 # Table: Personnage
 #------------------------------------------------------------
@@ -12,6 +16,7 @@ CREATE TABLE Personnage(
         nom            Varchar (20) NOT NULL ,
         prenom         Varchar (20) NOT NULL ,
         date_naissance Date NOT NULL
+        sexe           Varchar (10) NOT NULL,
 	,CONSTRAINT Personnage_PK PRIMARY KEY (id_personnage)
 )ENGINE=InnoDB;
 
@@ -22,11 +27,8 @@ CREATE TABLE Personnage(
 
 CREATE TABLE Realisateur(
         id_personnage  Int NOT NULL ,
-        nom            Varchar (20) NOT NULL ,
-        prenom         Varchar (20) NOT NULL ,
-        date_naissance Date NOT NULL
+        id_acteur Int NOT NULL
 	,CONSTRAINT Realisateur_PK PRIMARY KEY (id_personnage)
-
 	,CONSTRAINT Realisateur_Personnage_FK FOREIGN KEY (id_personnage) REFERENCES Personnage(id_personnage)
 )ENGINE=InnoDB;
 
@@ -45,7 +47,6 @@ CREATE TABLE Film(
         affiche         Varchar (50) ,
         id_personnage   Int NOT NULL
 	,CONSTRAINT Film_PK PRIMARY KEY (id_film)
-
 	,CONSTRAINT Film_Realisateur_FK FOREIGN KEY (id_personnage) REFERENCES Realisateur(id_personnage)
 )ENGINE=InnoDB;
 
@@ -56,11 +57,8 @@ CREATE TABLE Film(
 
 CREATE TABLE Acteur(
         id_personnage  Int NOT NULL ,
-        nom            Varchar (20) NOT NULL ,
-        prenom         Varchar (20) NOT NULL ,
-        date_naissance Date NOT NULL
-	,CONSTRAINT Acteur_PK PRIMARY KEY (id_personnage)
-
+        id_acteur      Int NOT NULL
+	,CONSTRAINT Acteur_PK PRIMARY KEY (id_acteur)
 	,CONSTRAINT Acteur_Personnage_FK FOREIGN KEY (id_personnage) REFERENCES Personnage(id_personnage)
 )ENGINE=InnoDB;
 
@@ -97,7 +95,6 @@ CREATE TABLE jouer(
         id_role       Int NOT NULL ,
         id_personnage Int NOT NULL
 	,CONSTRAINT jouer_PK PRIMARY KEY (id_film,id_role,id_personnage)
-
 	,CONSTRAINT jouer_Film_FK FOREIGN KEY (id_film) REFERENCES Film(id_film)
 	,CONSTRAINT jouer_Role0_FK FOREIGN KEY (id_role) REFERENCES Role(id_role)
 	,CONSTRAINT jouer_Acteur1_FK FOREIGN KEY (id_personnage) REFERENCES Acteur(id_personnage)
@@ -112,7 +109,6 @@ CREATE TABLE posseder(
         id_genre Int NOT NULL ,
         id_film  Int NOT NULL
 	,CONSTRAINT posseder_PK PRIMARY KEY (id_genre,id_film)
-
 	,CONSTRAINT posseder_Genre_FK FOREIGN KEY (id_genre) REFERENCES Genre(id_genre)
 	,CONSTRAINT posseder_Film0_FK FOREIGN KEY (id_film) REFERENCES Film(id_film)
 )ENGINE=InnoDB;
