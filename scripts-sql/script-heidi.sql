@@ -59,7 +59,7 @@ INSERT INTO `film` (`id_film`, `titre`, `annee_sortie_fr`, `duree`, `synopsis`, 
 	(3, 'Blade Runner', '2019', 153, NULL, NULL, NULL, 1),
 	(4, 'DUNE', '2021', 155, NULL, NULL, NULL, 1),
 	(5, 'Le Parrain II', '1974', 112, NULL, NULL, NULL, 3),
-	(6, 'Gran Torino', '2019', 112, NULL, NULL, NULL, 9),
+	(6, 'Gran Torino', '2019', 112, NULL, NULL, NULL, 5),
 	(7, 'Alien, le huitième passager', '1979', 117, NULL, NULL, NULL, 4);
 /*!40000 ALTER TABLE `film` ENABLE KEYS */;
 

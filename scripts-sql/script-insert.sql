@@ -61,7 +61,7 @@ INSERT INTO jouer (id_personnage,id_role,id_film) VALUES
 	(8,7,7),
 	(5,3,4),
 	(6,3,4),
-	(6,9,6),
+	(6,9,3),
 	(6,7,7),
 	(9,8,6),
 	(5,5,1),
