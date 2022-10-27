@@ -27,8 +27,8 @@ CREATE TABLE Personnage(
 
 CREATE TABLE Realisateur(
         id_personnage  Int NOT NULL ,
-        id_acteur Int NOT NULL
-	,CONSTRAINT Realisateur_PK PRIMARY KEY (id_personnage)
+        id_realisateur Int NOT NULL
+	,CONSTRAINT Realisateur_PK PRIMARY KEY (id_realisateur)
 	,CONSTRAINT Realisateur_Personnage_FK FOREIGN KEY (id_personnage) REFERENCES Personnage(id_personnage)
 )ENGINE=InnoDB;
 
@@ -80,7 +80,6 @@ CREATE TABLE Role(
 
 CREATE TABLE Genre(
         id_genre Int  Auto_increment  NOT NULL ,
-        nom      Varchar (20) NOT NULL ,
         libelle  Varchar (20) NOT NULL
 	,CONSTRAINT Genre_PK PRIMARY KEY (id_genre)
 )ENGINE=InnoDB;
