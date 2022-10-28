@@ -7,7 +7,7 @@ class CinemaController{
     public function listFilms(){
 
         $pdo = Connect::seConnecter();
-        $requete = $pdo->query("SELECT titre, annee_sortie FROM film");
+        $requete = $pdo->query("SELECT titre, annee_sortie_fr FROM film");
 
         require "view/listFilms.php";
     }
