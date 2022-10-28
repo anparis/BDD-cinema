@@ -5,24 +5,26 @@
 <table>
     <thead>
         <tr>
-            <th>Titre</th>
-            <th>Annee Sortie</th>
+            <th>Nom</th>
+            <th>Age</th>
+            <th>Sexe</th>
         </tr>
     </thead>
     <tbody>
         <?php
-            foreach($requete->fetchALL() as $film) { ?>
+            foreach($requete->fetchALL() as $acteur) { ?>
                 <tr>
-                    <td><?= $film["titre"] ?></td>
-                    <td><?= $film["annee_sortie_fr"] ?></td>
-                </tr>    
+                    <td><?= $acteur["prenom"] ?> <?= $acteur["nom"] ?></td>
+                    <td><?= $acteur["age"] ?></td>
+                    <td><?= $acteur["sexe"] ?></td>
+                </tr>
         <?php } ?>
     </tbody>
 </table>
 
 <?php
 
-$titre = "Liste des films";
-$titre_secondaire = "Liste des films";
+$titre = "Liste des Acteurs";
+$titre_secondaire = "Liste des acteurs";
 $contenu = ob_get_clean();
 require "view/template.php";
