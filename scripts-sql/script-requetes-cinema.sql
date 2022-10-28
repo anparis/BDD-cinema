@@ -36,26 +36,25 @@ ORDER BY nb_film DESC
 SELECT film.titre, personnage.prenom, personnage.nom, personnage.sexe
 FROM film
 INNER JOIN jouer ON jouer.id_film = film.id_film
-INNER JOIN personnage ON jouer.id_personnage = personnage.id_personnage
+INNER JOIN acteur ON jouer.id_acteur = acteur.id_acteur
+INNER JOIN personnage ON acteur.id_personnage = personnage.id_personnage
 WHERE film.id_film = ..
 
 -- g.Films tournés par un acteur en particulier (id_acteur)avec leur rôle et l’année de sortie (du film le plus récent au plus ancien)
 SELECT personnage.prenom, personnage.nom, film.titre, role.nom, film.annee_sortie_fr
-FROM acteur
-INNER JOIN jouer ON acteur.id_personnage = jouer.id_personnage
+FROM personnage
+INNER JOIN acteur ON acteur.id_personnage = personnage.id_personnage
+INNER JOIN jouer ON jouer.id_acteur = acteur.id_acteur
 INNER JOIN role ON role.id_role = jouer.id_role
-INNER JOIN personnage ON jouer.id_personnage = personnage.id_personnage
-INNER JOIN realisateur ON realisateur.id_personnage = acteur.id_personnage
-INNER JOIN film ON film.id_realisateur = realisateur.id_realisateur
-WHERE acteur.id_acteur = 5
+INNER JOIN film ON jouer.id_film = film.id_film
+WHERE acteur.id_acteur = ..
 ORDER BY film.annee_sortie_fr DESC
 
 -- h.Listes des personnes qui sont à la fois acteurs et réalisateurs
 SELECT personnage.prenom, personnage.nom
 FROM acteur
-INNER JOIN jouer ON acteur.id_personnage = jouer.id_personnage
-INNER JOIN personnage ON jouer.id_personnage = personnage.id_personnage
-INNER JOIN realisateur ON realisateur.id_personnage = acteur.id_personnage
+INNER JOIN personnage ON acteur.id_personnage = personnage.id_personnage
+INNER JOIN realisateur ON realisateur.id_personnage = personnage.id_personnage
 INNER JOIN film ON film.id_realisateur = realisateur.id_realisateur
 
 -- i.Liste des films qui ont moins de 5 ans (classés du plus récent au plus ancien)
@@ -80,7 +79,7 @@ HAVING age >= 50
 SELECT personnage.prenom, personnage.nom
 FROM personnage
 INNER JOIN acteur ON personnage.id_personnage = acteur.id_personnage
-INNER JOIN jouer ON acteur.id_personnage = jouer.id_personnage
+INNER JOIN jouer ON acteur.id_acteur = jouer.id_acteur
 INNER JOIN film ON jouer.id_film = film.id_film
 GROUP BY personnage.id_personnage
 HAVING COUNT(film.id_film) >= 3

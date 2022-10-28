@@ -89,27 +89,27 @@ INSERT INTO `genre` (`id_genre`, `libelle`) VALUES
 CREATE TABLE IF NOT EXISTS `jouer` (
   `id_film` int(11) NOT NULL,
   `id_role` int(11) NOT NULL,
-  `id_personnage` int(11) NOT NULL,
-  PRIMARY KEY (`id_film`,`id_role`,`id_personnage`),
+  `id_acteur` int(11) NOT NULL,
+  PRIMARY KEY (`id_film`,`id_role`,`id_acteur`),
   KEY `jouer_Role0_FK` (`id_role`),
-  KEY `jouer_Acteur1_FK` (`id_personnage`),
-  CONSTRAINT `jouer_Acteur1_FK` FOREIGN KEY (`id_personnage`) REFERENCES `acteur` (`id_personnage`),
+  KEY `jouer_Acteur1_FK` (`id_acteur`),
+  CONSTRAINT `jouer_Acteur1_FK` FOREIGN KEY (`id_acteur`) REFERENCES `acteur` (`id_acteur`),
   CONSTRAINT `jouer_Film_FK` FOREIGN KEY (`id_film`) REFERENCES `film` (`id_film`),
   CONSTRAINT `jouer_Role0_FK` FOREIGN KEY (`id_role`) REFERENCES `role` (`id_role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Listage des données de la table cinema.jouer : ~0 rows (environ)
 /*!40000 ALTER TABLE `jouer` DISABLE KEYS */;
-INSERT INTO `jouer` (`id_film`, `id_role`, `id_personnage`) VALUES
-	(4, 3, 5),
-	(4, 3, 6),
-	(2, 4, 10),
-	(1, 5, 5),
-	(2, 6, 7),
-	(7, 7, 6),
-	(7, 7, 8),
-	(6, 8, 9),
-	(6, 9, 6);
+INSERT INTO `jouer` (`id_film`, `id_role`, `id_acteur`) VALUES
+	(4, 3, 1),
+	(4, 3, 2),
+	(2, 4, 6),
+	(1, 5, 1),
+	(2, 6, 3),
+	(7, 7, 2),
+	(7, 7, 4),
+	(6, 8, 5),
+	(6, 9, 2);
 /*!40000 ALTER TABLE `jouer` ENABLE KEYS */;
 
 -- Listage de la structure de la table cinema. personnage
