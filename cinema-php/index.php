@@ -1,9 +1,10 @@
 <?php
-use Controller\CinemaController;
 spl_autoload_register(function ($class_name) {
-    include $class_name . '.php';
-
+    $class_name = str_replace("\\", DIRECTORY_SEPARATOR, $class_name);
+    include_once $class_name . '.php';
 });
+
+use Controller\CinemaController;
 
 $ctrlCinema = new CinemaController();
 
