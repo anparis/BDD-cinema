@@ -1,6 +1,6 @@
 <?php ob_start(); ?>
 
-<p>Il y a <?= $requete->rowCount() ?> films</p>
+<p>Il y a <?= $requete->rowCount() ?> acteurs</p>
 
 <table>
     <thead>
