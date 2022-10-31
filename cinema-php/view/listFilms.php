@@ -1,5 +1,5 @@
 <?php ob_start(); ?>
-
+<a href="?action=FormFilm">Ajouter un film</a>
 <p>Il y a <?= $requete->rowCount() ?> films</p>
 
 <table>

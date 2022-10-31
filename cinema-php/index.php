@@ -13,9 +13,17 @@ $ctrlCinema = new CinemaController();
 if(isset($_GET["action"])){
     switch($_GET["action"]){
         case "ListFilms" : $ctrlCinema->listFilms(); break;
-        case "ListActeurs" : $ctrlCinema->listActors(); break;
+        case "ListActors" : $ctrlCinema->listActors(); break;
+        case "ListDirectors" : $ctrlCinema->listDirectors(); break;
+        case "FormFilm" : $ctrlCinema->sendDirectorsName(); break;
     }
     die;
 }
+
+
+if(isset($_POST["submit"])){     
+    $ctrlCinema->addFilms($_POST);
+}
+
 
 require('view/homepage.php');

@@ -10,7 +10,8 @@
         <ul>
             <a href="?">Home</a>
             <a href="?action=ListFilms">Films</a>
-            <a href="?action=ListActeurs">Acteurs</a>
+            <a href="?action=ListActors">Acteurs</a>
+            <a href="?action=ListDirectors">Réalisateurs</a>
         </ul>
     </nav>
     <main>
