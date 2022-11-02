@@ -3,7 +3,7 @@
         <p>
             <label>
                 Titre du film :
-                <input type="text" name="titre">
+                <input type="text" name="titre" maxlength="50">
             </label>
         </p>
         <p>
@@ -41,5 +41,3 @@ $titre = "Formulaire des Films";
 $titre_secondaire = "Ajouter un Film";
 $contenu = ob_get_clean();
 require('view/template.php');
-// header("Location:formFilm.php");
-// exit();

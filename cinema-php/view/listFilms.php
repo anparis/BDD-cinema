@@ -1,5 +1,4 @@
 <?php ob_start(); ?>
-<a href="?action=FormFilm">Ajouter un film</a>
 <p>Il y a <?= $requete->rowCount() ?> films</p>
 
 <table>
@@ -13,10 +12,14 @@
         <?php
             foreach($requete->fetchALL() as $film) { ?>
                 <tr>
-                    <td><?= $film["titre"] ?></td>
-                    <td><?= $film["annee_sortie_fr"] ?></td>
+                    <td><?= $film["title"] ?></td>
+                    <td><?= $film["year"] ?></td>
                 </tr>    
         <?php } ?>
+        <tr>
+            <td colspan="2"><a href="?action=formFilm">Ajouter un film</a></td>
+        </tr>
+
     </tbody>
 </table>
 

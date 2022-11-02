@@ -7,16 +7,14 @@
         <tr>
             <th>Nom</th>
             <th>Age</th>
-            <th>Sexe</th>
         </tr>
     </thead>
     <tbody>
         <?php
             foreach($requete->fetchALL() as $acteur) { ?>
                 <tr>
-                    <td><?= $acteur["prenom"] ?> <?= $acteur["nom"] ?></td>
+                    <td><a href="index.php?action=actorDetails&id=<?= $acteur['id_acteur']?>"><?= $acteur["complete_name"] ?></a></td>
                     <td><?= $acteur["age"] ?></td>
-                    <td><?= $acteur["sexe"] ?></td>
                 </tr>
         <?php } ?>
     </tbody>

@@ -7,16 +7,14 @@
         <tr>
             <th>Nom</th>
             <th>Age</th>
-            <th>Sexe</th>
         </tr>
     </thead>
     <tbody>
         <?php
             foreach($requete->fetchALL() as $director) { ?>
                 <tr>
-                    <td><?= $director["prenom"] ?> <?= $director["nom"] ?></td>
+                    <td><?= $director["complete_name"] ?></td>
                     <td><?= $director["age"] ?></td>
-                    <td><?= $director["sexe"] ?></td>
                 </tr>
         <?php } ?>
     </tbody>

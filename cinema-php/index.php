@@ -12,18 +12,19 @@ $ctrlCinema = new CinemaController();
 
 if(isset($_GET["action"])){
     switch($_GET["action"]){
-        case "ListFilms" : $ctrlCinema->listFilms(); break;
-        case "ListActors" : $ctrlCinema->listActors(); break;
-        case "ListDirectors" : $ctrlCinema->listDirectors(); break;
-        case "FormFilm" : $ctrlCinema->sendDirectorsName(); break;
+        case "listFilms" : $ctrlCinema->listFilms(); break;
+        case "listActors" : $ctrlCinema->listActors(); break;
+        case "listDirectors" : $ctrlCinema->listDirectors(); break;
+        case "formFilm" : $ctrlCinema->sendDirectorsName(); break;
+        case "actorDetails" : $ctrlCinema->actorDetails($_GET["id"]); break;
+        case "addFilm" : 
+            if(isset($_POST["submit"])){     
+                $ctrlCinema->addFilms($_POST);
+            }; 
+            break;
     }
-    die;
 }
+else $ctrlCinema->homePage();
 
 
-if(isset($_POST["submit"])){     
-    $ctrlCinema->addFilms($_POST);
-}
 
-
-require('view/homepage.php');

@@ -9,9 +9,9 @@
     <nav>
         <ul>
             <a href="?">Home</a>
-            <a href="?action=ListFilms">Films</a>
-            <a href="?action=ListActors">Acteurs</a>
-            <a href="?action=ListDirectors">Réalisateurs</a>
+            <a href="?action=listFilms">Films</a>
+            <a href="?action=listActors">Acteurs</a>
+            <a href="?action=listDirectors">Réalisateurs</a>
         </ul>
     </nav>
     <main>
