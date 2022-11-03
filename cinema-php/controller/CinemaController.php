@@ -159,34 +159,51 @@ class CinemaController{
             "SELECT genre.id_genre AS id_genre, libelle
              FROM genre"
         );
-        $titre = filter_input(INPUT_POST, "titre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $annee = filter_input(INPUT_POST, "annee", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $duree = filter_input(INPUT_POST, "duree", FILTER_VALIDATE_INT);
-        $directors = filter_input(INPUT_POST, "directors", FILTER_VALIDATE_INT);
-        $genre = filter_input(INPUT_POST, "genre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $note = filter_input(INPUT_POST, "note", FILTER_VALIDATE_INT);
-        $synopsis = filter_input(INPUT_POST, "synopsis", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-        // here I control my data and then I inject it in my DB
-        if(isset($_POST["submitFilm"]) && $titre && $annee && $duree && $directors && $genre){
-            $requete_film = $pdo->query(
-                "INSERT INTO film (titre, annee_sortie_fr, duree, id_realisateur, note, synopsis)
-                 VALUES ('$titre', '$annee', $duree, $directors)" //insertion of films from user input still needs to be verified
-            );
-    
-            // with this function I can get the latest id that has been added into my DB
-            $id_film = $pdo->lastInsertId('film');
-    
-            foreach($genre as $key => $id_genre){
-                $requete_posseder = $pdo->query(
-                    "INSERT INTO posseder (id_film,id_genre)
-                    VALUES ($id_film,$id_genre)" 
-                );
+        // here I verify my data and then I inject it in my DB
+        
+        if(isset($_POST["submitFilm"])){
+            $titre = filter_input(INPUT_POST, "titre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $annee = filter_input(INPUT_POST, "annee", FILTER_VALIDATE_INT);
+            $duree = filter_input(INPUT_POST, "duree", FILTER_VALIDATE_INT);
+            $directors = filter_input(INPUT_POST, "directors", FILTER_VALIDATE_INT);
+            $genre = filter_input(INPUT_POST, "genre", FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $note = filter_input(INPUT_POST, "note", FILTER_VALIDATE_INT);
+            $synopsis = filter_input(INPUT_POST, "synopsis", FILTER_DEFAULT);
+
+            if($titre && $annee && $duree && $directors && $genre && is_string($synopsis) && $note){
+                $requete_film = $pdo->prepare("INSERT INTO film 
+                (titre, annee_sortie_fr, duree, note, synopsis, id_realisateur)
+                VALUES (:titre, 
+                        :annee_sortie_fr, 
+                        :duree, 
+                        :note, 
+                        :synopsis,
+                        :id_realisateur
+                    )");
+
+                $requete_film->execute([
+                    "titre" => $titre,
+                    "annee_sortie_fr" => $annee,
+                    "duree" => $duree,
+                    "note" => $note,
+                    "synopsis" => $synopsis,
+                    "id_realisateur" => $directors
+                ]);
+        
+                //with this function I can get the latest id that has been added into my DB
+                $id_film = $pdo->lastInsertId('film');
+        
+                foreach($genre as $id_genre){
+                    $requete_posseder = $pdo->prepare("INSERT INTO posseder (id_film, id_genre) VALUES (:id_film, :id_genre)");
+                    $requete_posseder->execute([
+                        "id_film" => $id_film,
+                        "id_genre" => $id_genre
+                    ]);
+                }    
             }
-    
         }
         require "view/addFilm.php";
     }
-
     
 }
