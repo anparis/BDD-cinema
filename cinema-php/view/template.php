@@ -12,6 +12,7 @@
             <a href="?action=listFilms">Films</a>
             <a href="?action=listActors">Acteurs</a>
             <a href="?action=listDirectors">Réalisateurs</a>
+            <a href="?action=listGenre">Genre</a>
         </ul>
     </nav>
     <main>

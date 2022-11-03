@@ -9,7 +9,9 @@ class CinemaController{
     }
 
     /*
+
         Display list functions
+
     */
 
     // list of films
@@ -56,13 +58,15 @@ class CinemaController{
             "SELECT id_genre, libelle
             FROM genre
             ORDER BY libelle ASC"
-        )
+        );
 
         require "view/listGenre.php";
     }
 
     /*
+
         Display details functions
+
     */
 
     // details about actors
@@ -120,19 +124,24 @@ class CinemaController{
     }
 
     /*
+
         Add functions
+
     */
 
-    public function addGenre($genre){
-        $libelle = $genre['libelle'];
-        
-        $pdo = Connect::seConnecter();
-        $requete = $pdo->query(
-            "INSERT INTO genre (libelle)
-             VALUES ($libelle)"
-        );
-        header("Location:listFilms.php");
-        exit();
+    public function addGenre(){
+        $libelle = filter_input(INPUT_POST, "libelle", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        if(isset($_POST["submitGenre"]) && $libelle){
+            $pdo = Connect::seConnecter();
+
+            $requete = $pdo->query(
+                "INSERT INTO genre (libelle)
+                 VALUES ('$libelle')"
+            );
+        }
+
+        require "view/addGenre.php";
     }
 
     // here I query directors and genres from my DB to inject them into lists in my addFilm form
@@ -155,11 +164,13 @@ class CinemaController{
         $duree = filter_input(INPUT_POST, "duree", FILTER_VALIDATE_INT);
         $directors = filter_input(INPUT_POST, "directors", FILTER_VALIDATE_INT);
         $genre = filter_input(INPUT_POST, "genre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        
+        $note = filter_input(INPUT_POST, "note", FILTER_VALIDATE_INT);
+        $synopsis = filter_input(INPUT_POST, "synopsis", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
         // here I control my data and then I inject it in my DB
         if(isset($_POST["submitFilm"]) && $titre && $annee && $duree && $directors && $genre){
             $requete_film = $pdo->query(
-                "INSERT INTO film (titre, annee_sortie_fr, duree, id_realisateur)
+                "INSERT INTO film (titre, annee_sortie_fr, duree, id_realisateur, note, synopsis)
                  VALUES ('$titre', '$annee', $duree, $directors)" //insertion of films from user input still needs to be verified
             );
     
