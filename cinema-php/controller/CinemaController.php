@@ -3,9 +3,15 @@ namespace Controller;
 use Model\Connect;
 
 class CinemaController{
+
     public function homePage(){
         require "view/homepage.php";
     }
+
+    /*
+        Display list functions
+    */
+
     // list of films
     public function listFilms(){
         $pdo = Connect::seConnecter();
@@ -43,6 +49,21 @@ class CinemaController{
 
         require "view/listDirectors.php";
     }
+
+    public function listGenre(){
+        $pdo = Connect::seConnecter();
+        $requete = $pdo->query(
+            "SELECT id_genre, libelle
+            FROM genre
+            ORDER BY libelle ASC"
+        )
+
+        require "view/listGenre.php";
+    }
+
+    /*
+        Display details functions
+    */
 
     // details about actors
     public function actorDetails($id){
@@ -98,6 +119,22 @@ class CinemaController{
         require "view/filmDetails.php";
     }
 
+    /*
+        Add functions
+    */
+
+    public function addGenre($genre){
+        $libelle = $genre['libelle'];
+        
+        $pdo = Connect::seConnecter();
+        $requete = $pdo->query(
+            "INSERT INTO genre (libelle)
+             VALUES ($libelle)"
+        );
+        header("Location:listFilms.php");
+        exit();
+    }
+
     // here I query directors and genres from my DB to inject them into lists in my addFilm form
     public function addFilm(){
         
@@ -113,43 +150,32 @@ class CinemaController{
             "SELECT genre.id_genre AS id_genre, libelle
              FROM genre"
         );
+        $titre = filter_input(INPUT_POST, "titre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $annee = filter_input(INPUT_POST, "annee", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $duree = filter_input(INPUT_POST, "duree", FILTER_VALIDATE_INT);
+        $directors = filter_input(INPUT_POST, "directors", FILTER_VALIDATE_INT);
+        $genre = filter_input(INPUT_POST, "genre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
+        // here I control my data and then I inject it in my DB
+        if(isset($_POST["submitFilm"]) && $titre && $annee && $duree && $directors && $genre){
+            $requete_film = $pdo->query(
+                "INSERT INTO film (titre, annee_sortie_fr, duree, id_realisateur)
+                 VALUES ('$titre', '$annee', $duree, $directors)" //insertion of films from user input still needs to be verified
+            );
+    
+            // with this function I can get the latest id that has been added into my DB
+            $id_film = $pdo->lastInsertId('film');
+    
+            foreach($genre as $key => $id_genre){
+                $requete_posseder = $pdo->query(
+                    "INSERT INTO posseder (id_film,id_genre)
+                    VALUES ($id_film,$id_genre)" 
+                );
+            }
+    
+        }
         require "view/addFilm.php";
     }
 
-    // here I control my data and then I inject it in my DB
-    public function traitementFilm($film){
-        $titre = $film['titre'];
-        $annee = $film['annee'];
-        $duree = (int) $film['duree'];
-        $directors = (int) $film['directors'];
-        $id_genre = (int) $film['genre'];
-
-        $pdo = Connect::seConnecter();
-
-        $requete_film = $pdo->query(
-            "INSERT INTO film (titre, annee_sortie_fr, duree, id_realisateur)
-             VALUES ('$titre', '$annee', $duree, $directors)" //insertion of films from user input still needs to be verified
-        );
-
-        $id_film = $pdo->lastInsertId('film');
-
-        $requete_posseder = $pdo->query(
-            "INSERT INTO posseder (id_film,id_genre)
-             VALUES ($id_film,$id_genre)" 
-        );
-        header("Location:listFilms.php");
-        exit();
-    }
-
-    public function addGenre($genre){
-        $libelle = $genre['libelle'];
-        
-        $pdo = Connect::seConnecter();
-        $requete = $pdo->query(
-            "INSERT INTO genre (libelle)
-             VALUES ($libelle)"
-        );
-        header("Location:listFilms.php");
-        exit();
-    }
+    
 }

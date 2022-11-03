@@ -21,12 +21,7 @@ if(isset($_GET["action"])){
     }
     die;
 } 
-
-if(isset($_POST["submitFilm"])){
-    $ctrlCinema->traitementFilm($_POST);
-}
-
-$ctrlCinema->homePage();
+else $ctrlCinema->homePage();
 
 
 

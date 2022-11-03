@@ -1,5 +1,5 @@
 <?php ob_start(); ?>
-    <form action="../index.php" method="post" enctype="multipart/form-data">
+    <form action="?action=addFilm" method="post" enctype="multipart/form-data">
         <p>
             <label>
                 Titre du film :
@@ -24,7 +24,7 @@
                 <select name="directors" id="directorList">
                     <?php
                     foreach($requete_dir->fetchALL() as $director) { ?>
-                            <option value="<?= $director['id_realisateur'] ?>"><?= $director["complete_name"]?></option>
+                            <option value=<?= $director['id_realisateur'] ?>><?= $director["complete_name"]?></option>
                     <?php } ?>
                     </select>
             </label>
@@ -32,10 +32,10 @@
         <p>
             <label>
                 Genre :
-                <select name="genre" id="genreList">
+                <select name="genre[]" id="genreList" multiple>
                     <?php
                     foreach($requete_genre->fetchALL() as $genre) { ?>
-                            <option value="<?= $genre['id_genre'] ?>"><?= $genre["libelle"] ?></option>
+                        <option value=<?= $genre['id_genre'] ?>><?= $genre["libelle"] ?></option>
                     <?php } ?>
             </label>
         </p>
