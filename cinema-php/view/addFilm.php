@@ -21,18 +21,26 @@
         <p>
             <label>
                 Réalisateur :
-                <input name="directors" list="directorlist">
-                <datalist id="directorlist">
+                <select name="directors" id="directorList">
                     <?php
-                    $i = 1;
-                    foreach($requete->fetchALL() as $director) { ?>
-                            <option value="<?= $i ?>"><?= $director["prenom"] ?> <?= $director["nom"] ?></option>
-                    <?php $i++; } ?>
-                </datalist>
+                    foreach($requete_dir->fetchALL() as $director) { ?>
+                            <option value="<?= $director['id_realisateur'] ?>"><?= $director["complete_name"]?></option>
+                    <?php } ?>
+                    </select>
             </label>
         </p>
         <p>
-            <input type="submit" name="submit" value="Ajouter le film">
+            <label>
+                Genre :
+                <select name="genre" id="genreList">
+                    <?php
+                    foreach($requete_genre->fetchALL() as $genre) { ?>
+                            <option value="<?= $genre['id_genre'] ?>"><?= $genre["libelle"] ?></option>
+                    <?php } ?>
+            </label>
+        </p>
+        <p>
+            <input type="submit" name="submitFilm" value="Ajouter le film">
         </p>
     </form>
 

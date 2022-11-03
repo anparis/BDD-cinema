@@ -12,12 +12,12 @@
         <?php
             foreach($requete->fetchALL() as $film) { ?>
                 <tr>
-                    <td><?= $film["title"] ?></td>
+                    <td><a href="?action=filmDetails&id=<?= $film["id_film"] ?>"><?= $film["title"] ?></a></td>
                     <td><?= $film["year"] ?></td>
                 </tr>    
         <?php } ?>
         <tr>
-            <td colspan="2"><a href="?action=formFilm">Ajouter un film</a></td>
+            <td colspan="2"><a href="?action=addFilm">Ajouter un film</a></td>
         </tr>
 
     </tbody>

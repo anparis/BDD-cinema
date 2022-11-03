@@ -15,16 +15,18 @@ if(isset($_GET["action"])){
         case "listFilms" : $ctrlCinema->listFilms(); break;
         case "listActors" : $ctrlCinema->listActors(); break;
         case "listDirectors" : $ctrlCinema->listDirectors(); break;
-        case "formFilm" : $ctrlCinema->sendDirectorsName(); break;
         case "actorDetails" : $ctrlCinema->actorDetails($_GET["id"]); break;
-        case "addFilm" : 
-            if(isset($_POST["submit"])){     
-                $ctrlCinema->addFilms($_POST);
-            }; 
-            break;
+        case "filmDetails" : $ctrlCinema->filmDetails($_GET["id"]); break;
+        case "addFilm" : $ctrlCinema->addFilm(); break;
     }
+    die;
+} 
+
+if(isset($_POST["submitFilm"])){
+    $ctrlCinema->traitementFilm($_POST);
 }
-else $ctrlCinema->homePage();
+
+$ctrlCinema->homePage();
 
 
 
