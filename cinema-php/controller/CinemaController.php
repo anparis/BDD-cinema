@@ -23,7 +23,7 @@ class CinemaController{
             ORDER BY year DESC"
         );
 
-        require "view/listFilms.php";
+        require "view/Film/listFilms.php";
     }
 
     // list of actors
@@ -36,7 +36,7 @@ class CinemaController{
              ORDER BY age DESC"
         );
 
-        require "view/listActors.php";
+        require "view/Actor/listActors.php";
     }
 
     // list of directors
@@ -49,7 +49,7 @@ class CinemaController{
              ORDER BY age DESC"
         );
 
-        require "view/listDirectors.php";
+        require "view/Director/listDirectors.php";
     }
 
     public function listGenre(){
@@ -60,7 +60,7 @@ class CinemaController{
             ORDER BY libelle ASC"
         );
 
-        require "view/listGenre.php";
+        require "view/Genre/listGenre.php";
     }
 
     /*
@@ -72,55 +72,60 @@ class CinemaController{
     // details about actors
     public function actorDetails($id){
         $pdo = Connect::seConnecter();
-        $requete_identity = $pdo->query(
+        $requete_identity = $pdo->prepare(
             "SELECT id_acteur, CONCAT( prenom,' ', nom ) AS complete_name, TIMESTAMPDIFF(YEAR, personnage.date_naissance, CURDATE()) AS age, sexe
              FROM personnage 
              INNER JOIN acteur ON acteur.id_personnage = personnage.id_personnage
-             WHERE id_acteur = $id"
+             WHERE id_acteur = :id"
         );
+        $requete_identity->execute(["id"=>$id]);
 
-        $requete_filmo = $pdo->query(
+        $requete_filmo = $pdo->prepare(
             "SELECT film.id_film AS id_film, film.titre AS film_title, role.nom AS role, film.annee_sortie_fr AS film_year
             FROM acteur
             INNER JOIN jouer ON jouer.id_acteur = acteur.id_acteur
             INNER JOIN role ON role.id_role = jouer.id_role
             INNER JOIN film ON jouer.id_film = film.id_film
-            WHERE acteur.id_acteur = $id"
+            WHERE acteur.id_acteur = :id"
             );
+        $requete_filmo->execute(["id"=>$id]);
 
-        require "view/actorDetails.php";
+        require "view/Actor/actorDetails.php";
     }
 
     // details about films
     public function filmDetails($id){
         $pdo = Connect::seConnecter();
-        $requete_identity = $pdo->query(
+        $requete_identity = $pdo->prepare(
             "SELECT film.titre AS title, film.annee_sortie_fr AS year, SEC_TO_TIME(duree*60) AS time, CONCAT( personnage.prenom, ' ', personnage.nom ) AS complete_name
             FROM film
             INNER JOIN realisateur ON realisateur.id_realisateur = film.id_realisateur
             INNER JOIN personnage ON personnage.id_personnage = realisateur.id_personnage
-            WHERE film.id_film = $id"
+            WHERE film.id_film = :id"
         );
+        $requete_identity->execute(["id" => $id]);
 
-        $requete_genre = $pdo->query(
+        $requete_genre = $pdo->prepare(
             "SELECT genre.libelle AS nom
             FROM genre
             INNER JOIN posseder ON posseder.id_genre = genre.id_genre
             INNER JOIN film ON posseder.id_film = film.id_film
-            WHERE film.id_film = $id"
+            WHERE film.id_film = :id"
         );
+        $requete_genre->execute(["id" => $id]);
 
-        $requete_casting = $pdo->query(
+        $requete_casting = $pdo->prepare(
             "SELECT CONCAT( personnage.prenom, ' ', personnage.nom ) AS complete_name, acteur.id_acteur as id_acteur, role.nom AS role
             FROM personnage
             INNER JOIN acteur ON acteur.id_personnage = personnage.id_personnage
             INNER JOIN jouer ON jouer.id_acteur = acteur.id_acteur
             INNER JOIN role ON role.id_role = jouer.id_role
             INNER JOIN film ON jouer.id_film = film.id_film
-            WHERE film.id_film = $id"
+            WHERE film.id_film = :id"
             );
+        $requete_casting->execute(["id" => $id]);
         
-        require "view/filmDetails.php";
+        require "view/Film/filmDetails.php";
     }
 
     /*
@@ -135,13 +140,14 @@ class CinemaController{
         if(isset($_POST["submitGenre"]) && $libelle){
             $pdo = Connect::seConnecter();
 
-            $requete = $pdo->query(
+            $requete = $pdo->prepare(
                 "INSERT INTO genre (libelle)
-                 VALUES ('$libelle')"
+                 VALUES (:libelle)"
             );
+            $requete->execute(["libelle"=>$libelle]);
         }
 
-        require "view/addGenre.php";
+        require "view/Genre/addGenre.php";
     }
 
     // here I query directors and genres from my DB to inject them into lists in my addFilm form
@@ -203,7 +209,7 @@ class CinemaController{
                 }    
             }
         }
-        require "view/addFilm.php";
+        require "view/Film/addFilm.php";
     }
     
 }
