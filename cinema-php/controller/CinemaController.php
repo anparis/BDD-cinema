@@ -244,18 +244,40 @@ class CinemaController{
     }
 
     public function addRole() {
+        $pdo = Connect::seConnecter();
+        // here I query film and actors from my DB to inject them into lists in my addRole form
+        $requete_actor = $pdo->query(
+            "SELECT id_acteur, CONCAT( prenom,' ', nom ) AS complete_name
+            FROM acteur
+            INNER JOIN personnage ON acteur.id_personnage = personnage.id_personnage"
+        );
+
+        $requete_film = $pdo->query(
+            "SELECT id_film, titre
+             FROM film"
+        );
+
         if(isset($_POST["submitRole"])) {
 
-            $pdo = Connect::seConnecter();
             $nom_role = filter_input(INPUT_POST, "role", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $id_acteur = filter_input(INPUT_POST, "actors", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $id_film = filter_input(INPUT_POST, "films", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             
-            if($nom_role) {
-                $requete = $pdo->prepare("INSERT INTO role (nom) VALUES (:nom)");
+            if($nom_role && $id_acteur && $id_film) {
+                $requete_role = $pdo->prepare("INSERT INTO role (nom) VALUES (:nom)");
                 
-                $requete->execute([
-                    "nom" => $nom_role,
+                $requete_role->execute([
+                    "nom" => $nom_role
                 ]);
-        
+
+                $id_role = $pdo->lastInsertId('role');
+
+                $requete_jouer = $pdo->prepare("INSERT INTO jouer (id_acteur,id_film,id_role) VALUES (:id_a, :id_f, :id_r)");
+                $requete_jouer->execute([
+                    "id_a" => $id_acteur,
+                    "id_f" => $id_film,
+                    "id_r" => $id_role,
+                ]);
                 header('Location: index.php?action=listRole');
                 die();
             }
@@ -273,6 +295,7 @@ class CinemaController{
             $prenom = filter_input(INPUT_POST, "prenom", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $sexe = filter_input(INPUT_POST, "sexe", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $date_naissance = filter_input(INPUT_POST, "date_naissance", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $checked = filter_input(INPUT_POST, "personne", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $type = filter_input(INPUT_GET, "type", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
             if($nom && $prenom && $sexe && $date_naissance && $type) {
@@ -292,6 +315,14 @@ class CinemaController{
                 $requete->execute([
                     "id_personnage" => $id_personnage
                 ]);
+                // if actor is also a director, then insert his id in director
+                if(!empty($checked)){
+                    $requete = $pdo->prepare("INSERT INTO $checked (id_personnage) VALUES (:id_personnage)");
+                
+                    $requete->execute([
+                        "id_personnage" => $id_personnage
+                    ]);
+                }
             }
         }
         require "view/Personnage/addPerson.php";
