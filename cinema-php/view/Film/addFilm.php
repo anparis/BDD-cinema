@@ -49,7 +49,13 @@
         <p>
             <label>
                 Synopsis :
-                <input type="textarea" name="synopsis">
+                <textarea name="synopsis" id="synopsis" cols="30" rows="15" class="form-control" placeholder="Synopsis"></textarea><br>
+            </label>
+        </p>
+        <p>
+            <label>
+                Affiche :
+                <input type="url" name="affiche" id="affiche" class="form-control" placeholder="Affiche (URL)"><br>
             </label>
         </p>
         <p>

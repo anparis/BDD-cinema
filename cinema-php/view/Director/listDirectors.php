@@ -18,7 +18,7 @@
                 </tr>
         <?php } ?>
         <tr>
-            <td colspan="2"><a href="?action=addPerson&type=realisateur">Ajouter un rélisateur</a></td>
+            <td colspan="2"><a href="?action=addPerson&type=realisateur">Ajouter un réalisateur</a></td>
         </tr>
     </tbody>
 </table>

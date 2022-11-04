@@ -107,7 +107,8 @@ class CinemaController{
     public function filmDetails($id){
         $pdo = Connect::seConnecter();
         $requete_identity = $pdo->prepare(
-            "SELECT film.titre AS title, film.annee_sortie_fr AS year, SEC_TO_TIME(duree*60) AS time, CONCAT( personnage.prenom, ' ', personnage.nom ) AS complete_name
+            "SELECT film.titre AS title, film.annee_sortie_fr AS year, SEC_TO_TIME(duree*60) AS time, CONCAT( personnage.prenom, ' ', personnage.nom ) AS complete_name, 
+            film.note AS note, film.synopsis AS synopsis, film.affiche AS affiche
             FROM film
             INNER JOIN realisateur ON realisateur.id_realisateur = film.id_realisateur
             INNER JOIN personnage ON personnage.id_personnage = realisateur.id_personnage
@@ -197,7 +198,7 @@ class CinemaController{
             "SELECT genre.id_genre AS id_genre, libelle
              FROM genre"
         );
-
+        
         // here I verify data from user input and I inject it in my DB
         if(isset($_POST["submitFilm"])){
             $titre = filter_input(INPUT_POST, "titre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -207,17 +208,22 @@ class CinemaController{
             $genre = filter_input(INPUT_POST, "genre", FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $note = filter_input(INPUT_POST, "note", FILTER_VALIDATE_INT);
             $synopsis = filter_input(INPUT_POST, "synopsis", FILTER_DEFAULT);
+            $affiche = filter_input(INPUT_POST, "affiche", FILTER_VALIDATE_URL);
 
-            if($titre && $annee && $duree && $directors && $genre && is_string($synopsis) && $note){
-                $requete_film = $pdo->prepare("INSERT INTO film 
-                (titre, annee_sortie_fr, duree, note, synopsis, id_realisateur)
+            if($titre && $annee && $duree && $directors && $genre && is_string($synopsis) && $note && $affiche){
+                var_dump($affiche);
+                var_dump($annee);
+                var_dump($directors);
+                var_dump($synopsis);
+                $requete_film = $pdo->prepare("INSERT INTO film (titre, annee_sortie_fr, duree, note, synopsis, affiche, id_realisateur)
                 VALUES (:titre, 
                         :annee_sortie_fr, 
                         :duree, 
                         :note, 
                         :synopsis,
+                        :affiche,
                         :id_realisateur
-                    )");
+                )");
 
                 $requete_film->execute([
                     "titre" => $titre,
@@ -225,12 +231,13 @@ class CinemaController{
                     "duree" => $duree,
                     "note" => $note,
                     "synopsis" => $synopsis,
+                    "affiche" => $affiche,
                     "id_realisateur" => $directors
                 ]);
         
                 // with this function I can get the latest id that has been added into my DB
-                $id_film = $pdo->lastInsertId('film');
-        
+                $id_film = $pdo->lastInsertId();
+
                 foreach($genre as $id_genre){
                     $requete_posseder = $pdo->prepare("INSERT INTO posseder (id_film, id_genre) VALUES (:id_film, :id_genre)");
                     $requete_posseder->execute([
@@ -327,5 +334,4 @@ class CinemaController{
         }
         require "view/Personnage/addPerson.php";
     }
-    
 }

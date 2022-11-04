@@ -30,6 +30,18 @@ $genre = $requete_genre->fetch();
                 <?php } ?>
             </td>
         </tr>
+        <tr>
+            <th scope="row" style="width:8em;">Note sur 5 : </th>
+            <td><?= $film["note"]?></td>
+        </tr>
+        <tr>
+            <th scope="row" style="width:8em;">Synopsis : </th>
+            <td><?= $film["synopsis"]?></td>
+        </tr>
+        <tr>
+            <th scope="row" style="width:8em;">Affiche : </th>
+            <td><img src=<?= $film["affiche"]?>></td>
+        </tr>
     </tbody>
 </table>
 
