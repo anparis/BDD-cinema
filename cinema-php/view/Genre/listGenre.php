@@ -1,4 +1,5 @@
 <?php ob_start(); ?>
+<p>Il y a <?= $requete->rowCount() ?> genres</p>
 
 <table>
     <thead>

@@ -56,8 +56,7 @@ class CinemaController{
         $pdo = Connect::seConnecter();
         $requete = $pdo->query(
             "SELECT id_genre, libelle
-            FROM genre
-            ORDER BY libelle ASC"
+            FROM genre"
         );
 
         require "view/Genre/listGenre.php";

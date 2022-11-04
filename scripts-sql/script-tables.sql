@@ -120,12 +120,7 @@ INSERT INTO `genre` (`id_genre`, `libelle`) VALUES
 (2, 'Fantasy'),
 (3, 'Gangsters'),
 (4, 'Thriller'),
-(5, 'drame'),
-(6, 'science-fiction'),
-(7, 'Fantasy'),
-(8, 'Gangsters'),
-(9, 'Thriller'),
-(10, 'drame');
+(5, 'drame');
 
 INSERT INTO `jouer` (`id_film`, `id_role`, `id_acteur`) VALUES
 (1, 5, 1),
