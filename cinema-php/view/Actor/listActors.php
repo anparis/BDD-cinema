@@ -17,6 +17,9 @@
                     <td><?= $acteur["age"] ?></td>
                 </tr>
         <?php } ?>
+        <tr>
+            <td colspan="2"><a href="?action=addPerson&type=acteur">Ajouter un acteur</a></td>
+        </tr>
     </tbody>
 </table>
 

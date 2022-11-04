@@ -63,6 +63,17 @@ class CinemaController{
         require "view/Genre/listGenre.php";
     }
 
+    public function listRole(){
+        $pdo = Connect::seConnecter();
+        $requete = $pdo->query(
+            "SELECT id_role, nom
+            FROM role
+            ORDER BY nom ASC"
+        );
+
+        require "view/Role/listRole.php";
+    }
+
     /*
 
         Display details functions
@@ -128,6 +139,28 @@ class CinemaController{
         require "view/Film/filmDetails.php";
     }
 
+    public function roleDetails($id){
+        $pdo = Connect::seConnecter();
+        $requete_identity = $pdo->prepare(
+            "SELECT id_role, nom
+            FROM role
+            WHERE id_role = :id"
+        );
+        $requete_identity->execute(["id" => $id]);
+
+        $requete_filmo = $pdo->prepare(
+            "SELECT CONCAT( personnage.prenom, ' ', personnage.nom ) AS actor_name, film.id_film AS id_film,acteur.id_acteur as id_actor, film.titre AS film_title, film.annee_sortie_fr AS film_year
+            FROM jouer
+            INNER JOIN film ON jouer.id_film = film.id_film
+            INNER JOIN acteur ON acteur.id_acteur = jouer.id_acteur
+            INNER JOIN personnage ON personnage.id_personnage = acteur.id_personnage
+            WHERE id_role = :id"
+        );
+        $requete_filmo->execute(["id" => $id]);
+
+        require "view/Role/roleDetails.php";
+    }
+
     /*
 
         Add functions
@@ -150,11 +183,11 @@ class CinemaController{
         require "view/Genre/addGenre.php";
     }
 
-    // here I query directors and genres from my DB to inject them into lists in my addFilm form
+    
     public function addFilm(){
         
         $pdo = Connect::seConnecter();
-        
+        // here I query directors and genres from my DB to inject them into lists in my addFilm form
         $requete_dir = $pdo->query(
             "SELECT id_realisateur, CONCAT( prenom,' ', nom ) AS complete_name
              FROM realisateur
@@ -166,8 +199,7 @@ class CinemaController{
              FROM genre"
         );
 
-        // here I verify my data and then I inject it in my DB
-        
+        // here I verify data from user input and I inject it in my DB
         if(isset($_POST["submitFilm"])){
             $titre = filter_input(INPUT_POST, "titre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $annee = filter_input(INPUT_POST, "annee", FILTER_VALIDATE_INT);
@@ -197,7 +229,7 @@ class CinemaController{
                     "id_realisateur" => $directors
                 ]);
         
-                //with this function I can get the latest id that has been added into my DB
+                // with this function I can get the latest id that has been added into my DB
                 $id_film = $pdo->lastInsertId('film');
         
                 foreach($genre as $id_genre){
@@ -210,6 +242,60 @@ class CinemaController{
             }
         }
         require "view/Film/addFilm.php";
+    }
+
+    public function addRole() {
+        if(isset($_POST["submitRole"])) {
+
+            $pdo = Connect::seConnecter();
+            $nom_role = filter_input(INPUT_POST, "role", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            
+            if($nom_role) {
+                $requete = $pdo->prepare("INSERT INTO role (nom) VALUES (:nom)");
+                
+                $requete->execute([
+                    "nom" => $nom_role,
+                ]);
+        
+                header('Location: index.php?action=listRole');
+                die();
+            }
+        }
+
+        require "view/Role/addRole.php";
+    }
+
+    public function addPerson($type) {
+
+        if(isset($_POST["submit"])) {
+            
+            $pdo = Connect::seConnecter();
+            $nom = filter_input(INPUT_POST, "nom", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $prenom = filter_input(INPUT_POST, "prenom", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $sexe = filter_input(INPUT_POST, "sexe", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $date_naissance = filter_input(INPUT_POST, "date_naissance", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $type = filter_input(INPUT_GET, "type", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            if($nom && $prenom && $sexe && $date_naissance && $type) {
+                
+                $requete = $pdo->prepare("INSERT INTO personnage (nom, prenom, date_naissance, sexe) 
+                                        VALUES (:nom, :prenom, :date_naissance, :sexe)");
+                $requete->execute([
+                    "nom" => $nom,
+                    "prenom" => $prenom,
+                    "date_naissance" => $date_naissance,
+                    "sexe" => $sexe
+                ]);
+
+                $id_personnage = $pdo->lastInsertId('personnage');
+                $requete = $pdo->prepare("INSERT INTO $type (id_personnage) VALUES (:id_personnage)");
+                
+                $requete->execute([
+                    "id_personnage" => $id_personnage
+                ]);
+            }
+        }
+        require "view/Personnage/addPerson.php";
     }
     
 }

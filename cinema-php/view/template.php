@@ -13,6 +13,7 @@
             <a href="?action=listActors">Acteurs</a>
             <a href="?action=listDirectors">Réalisateurs</a>
             <a href="?action=listGenre">Genre</a>
+            <a href="?action=listRole">Role</a>
         </ul>
     </nav>
     <main>
